@@ -30,7 +30,7 @@ describe("About Applying What We Have Learnt", function() {
         }
     }
 
-    expect(productsICanEat.length).toBe(FILL_ME_IN);
+    expect(productsICanEat.length).toBe(1);
   });
 
   it("given I'm allergic to nuts and hate mushrooms, it should find a pizza I can eat (functional)", function () {
@@ -38,7 +38,20 @@ describe("About Applying What We Have Learnt", function() {
 
       /* solve using filter() & all() / any() */
 
-      expect(productsICanEat.length).toBe(FILL_ME_IN);
+
+      var productsICanEat = _.filter(products, function(item) {
+        if (item.containsNuts === false) {
+          if (_.every(item.ingredients, function(ingredient){
+            return ingredient !== "mushrooms";
+          }))
+
+            return true;
+        }
+        return false;
+      });
+
+
+      expect(productsICanEat.length).toBe(1);
   });
 
   /*********************************************************************************/
@@ -52,13 +65,21 @@ describe("About Applying What We Have Learnt", function() {
       }
     }
     
-    expect(sum).toBe(FILL_ME_IN);
+    expect(sum).toBe(233168);
   });
 
   it("should add all the natural numbers below 1000 that are multiples of 3 or 5 (functional)", function () {
-    var sum = FILL_ME_IN;    /* try chaining range() and reduce() */
+    
+    var sum = _.range(0,1000).reduce(function(accumulator, number) {
+      if (number % 3 ===0 || number % 5 === 0) {
+         accumulator += number;
+      }
+      return accumulator;
 
-    expect(233168).toBe(FILL_ME_IN);
+    }, 0);    /* try chaining range() and reduce() */
+
+   
+    expect(233168).toBe(sum);
   });
 
   /*********************************************************************************/
@@ -71,7 +92,7 @@ describe("About Applying What We Have Learnt", function() {
         }
     }
 
-    expect(ingredientCount['mushrooms']).toBe(FILL_ME_IN);
+    expect(ingredientCount['mushrooms']).toBe(2);
   });
 
   it("should count the ingredient occurrence (functional)", function () {
@@ -79,24 +100,130 @@ describe("About Applying What We Have Learnt", function() {
 
     /* chain() together map(), flatten() and reduce() */
 
-    expect(ingredientCount['mushrooms']).toBe(FILL_ME_IN);
+    //for each product's ingredient array, return number of times mushrooms are used
+    //fltten all the arrays
+    //sum up the numbers in the array
+
+    /*
+
+    var flatArray =  _(_.map(products, function(product) {
+      return product.ingredients;
+    })).flatten();
+
+    */
+
+     var flatArray = _.chain(products).map(function(product) {
+      return product.ingredients;
+     }).flatten().value();
+
+
+
+      ingredientCount = _.reduce(flatArray, function(accumulator, item) {
+
+      if (item in accumulator) {
+        accumulator[item] += 1;
+      }
+      else {
+        accumulator[item] = 1;
+      }
+
+      return accumulator;
+
+
+    }, ingredientCount);
+
+
+   
+
+
+
+
+    expect(ingredientCount['mushrooms']).toBe(2);
   });
 
   /*********************************************************************************/
   /* UNCOMMENT FOR EXTRA CREDIT */
-  /*
-  it("should find the largest prime factor of a composite number", function () {
+ /*
+  it("should find the largest prime factor of a composite number", function (number) {
+
+    //find all the prime numbers up to composite number
+    //filter out the ones that are modulo 0 to number
+    //reduce to the largest number
+    var array = _.range(0,500);
+
+   var largestPrime =
+                     _.chain(array)
+                     .filter(isPrime)
+                     .filter(function(factor) {
+                      return 500 % factor === 0;
+                     })
+                     .reduce(function(accumulator,item) {
+                      if (accumulator > item) {
+                        return accumulator;
+                      }
+                      else {
+                        return item;
+                      }
+                     });
+
+    function isPrime (number) {
+      var primeBoolean = true;
+
+      for (var i=2; i<number; i++) {
+
+        if (number % i === 0) {
+          primeBoolean = false;
+        }
+
+      }
+      return primeBoolean;
+
+    }
+
+    console.log('largestPrime:'+largestPrime);
   
   });
 
+  */
+
   it("should find the largest palindrome made from the product of two 3 digit numbers", function () {
+
+
     
   });
 
   it("should find the smallest number divisible by each of the numbers 1 to 20", function () {
       
+      //while isdivisible is false
+      //loop through array of 1-20, and set isdivisible to true at start
+      //if % !== 0, then set it to false
+      //if true, return number 
+      //else, number++
+
+      //figure out which numbers are prime from 1-20
+      //multiply those and start there
+
+      var smallestNumDivisible = 0;
+      var factors = _.range(1,21);
+      var isDivisible = false;
+
+      while (!isDivisible) {
+
+        smallestNumDivisible +=20;
+
+        isDivisible = _.all(factors, function(factor) {
+
+          return smallestNumDivisible % factor === 0;
+        } )
+
+        
+      }
+
+      return smallestNumDivisible;
     
   });
+
+   /*
 
   it("should find the difference between the sum of the squares and the square of the sums", function () {
     
